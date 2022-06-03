@@ -1,0 +1,361 @@
+genDecl(name, space) ::= "<if(nested)><module(space)><endif><name>Seq, <if(nested)><module(space)><endif><name>"
+module(space) ::= <<<space>_>>
+typedefStruct(name, space) ::= <<typedef struct <if(nested)><module(space)><endif><name>Seq Seq;>>
+typedefTypeSupport(name, space) ::= <<typedef <if(nested)><module(space)><endif><name>TypeSupport TypeSupport;>>
+typedefDataWriter(name, space) ::= <<typedef <if(nested)><module(space)><endif><name>DataWriter DataWriter;>>
+typedefDataReader(name, space) ::= <<typedef <if(nested)><module(space)><endif><name>DataReader DataReader;>>
+parens(x) ::= <<(<x>)>>
+
+genShort(multiShort, ShortDecls, ShortVals, lastShortDecl, lastShortVal)::=
+<<
+<if(multiShort)>
+CDR_Short <ShortDecls,ShortVals:{d,v | <d>=<v>,}><lastShortDecl>=<lastShortVal>;
+<else>CDR_Short <ShortDecls>=<ShortVals>;
+<endif>
+>>
+initializeShort(ShortDecls, isShort)::=
+<<
+<ShortDecls:{d | CDR_Primitive_init_<if(isShort)>Short<endif>(&sample-><d>);}; separator="\n">
+>>
+
+genLong(multiLong, LongDecls, LongVals, lastLongDecl, lastLongVal)::=
+<<
+<if(multiLong)>
+CDR_Long <LongDecls,LongVals:{d,v | <d>=<v>,}><lastLongDecl>=<lastLongVal>;
+<else>CDR_Long <LongDecls>=<LongVals>;
+<endif>
+>>
+initializeLong(LongDecls, isLong)::=
+<<
+<LongDecls:{d | CDR_Primitive_init_<if(isLong)>Long<endif>(&sample-><d>);}; separator="\n">
+>>
+
+genLongLong(multiLongLong, LongLongDecls, LongLongVals, lastLongLongDecl, lastLongLongVal)::=
+<<
+<if(multiLongLong)>
+CDR_LongLong <LongLongDecls,LongLongVals:{d,v | <d>=<v>,}><lastLongLongDecl>=<lastLongLongVal>;
+<else>CDR_LongLong <LongLongDecls>=<LongLongVals>;
+<endif>
+>>
+initializeLongLong(LongLongDecls, isLongLong)::=
+<<
+<LongLongDecls:{d | CDR_Primitive_init_<if(isLongLong)>LongLong<endif>(&sample-><d>);}; separator="\n">
+>>
+
+genUnsignedShort(multiUnsignedShort, UnsignedShortDecls, UnsignedShortVals, LastUnsignedShortDecl, lastUnsignedShortVal)::=
+<<
+<if(multiUnsignedShort)>
+CDR_UnsignedShort <UnsignedShortDecls,UnsignedShortVals:{d,v | <d>=<v>,}><LastUnsignedShortDecl>=<lastUnsignedShortVal>;
+<else>CDR_UnsignedShort <UnsignedShortDecls>=<UnsignedShortVals>;
+<endif>
+>>
+initializeUnsignedShort(UnsignedShortDecls, isUnsignedShort)::=
+<<
+<UnsignedShortDecls:{d | CDR_Primitive_init_<if(isUnsignedShort)>UnsignedShort<endif>(&sample-><d>);}; separator="\n">
+>>
+
+
+genUnsignedLong(multiUnsignedLong, UnsignedLongDecls, UnsignedLongVals, lastUnsignedLongDecl, lastUnsignedLongVal)::=
+<<
+<if(multiUnsignedLong)>
+CDR_UnsignedLong <UnsignedLongDecls,UnsignedLongVals:{d,v | <d>=<v>,}><lastUnsignedLongDecl>=<lastUnsignedLongVal>;
+<else>CDR_UnsignedLong <UnsignedLongDecls>=<UnsignedLongVals>;
+<endif>
+>>
+initializeUnsignedLong(UnsignedLongDecls, isUnsignedLong)::=
+<<
+<UnsignedLongDecls:{d | CDR_Primitive_init_<if(isUnsignedLong)>UnsignedLong<endif>(&sample-><d>);}; separator="\n">
+>>
+
+
+genUnsignedLongLong(multiUnsignedLongLong, UnsignedLongLongDecls, UnsignedLongLongVals, lastUnsignedLongLongDecl, lastUnsignedLongLongVal)::=
+<<
+<if(multiUnsignedLongLong)>
+CDR_UnsignedLongLong <UnsignedLongLongDecls,UnsignedLongLongVals:{d,v | <d>=<v>,}><lastUnsignedLongLongDecl>=<lastUnsignedLongLongVal>;
+<else>CDR_UnsignedLongLong <UnsignedLongLongDecls>=<UnsignedLongLongVals>;
+<endif>
+>>
+initializeUnsignedLongLong(UnsignedLongLongDecls, isUnsignedLongLong)::=
+<<
+<UnsignedLongLongDecls:{d | CDR_Primitive_init_<if(isUnsignedLongLong)>UnsignedLongLong<endif>(&sample-><d>);}; separator="\n">
+>>
+
+
+genChar(multiChar, CharDecls, CharVals, lastCharDecl, lastCharVal)::=
+<<
+<if(multiChar)>
+CDR_Char <CharDecls,CharVals:{d,v | <d>=<v>,}><lastCharDecl>=<lastCharVal>;
+<else>CDR_Char <CharDecls>=<CharVals>;
+<endif>
+>>
+initializeChar(CharDecls, isChar)::=
+<<
+<CharDecls:{d | CDR_Primitive_init_<if(isChar)>Char<endif>(&sample-><d>);}; separator="\n">
+>>
+
+
+genString(multiString, StringDecls, StringVals, LastStringDecl, LastStringVal)::=
+<<
+<if(multiString)>
+CDR_String <StringDecls,StringVals:{d,v | <d>=<v>,}><LastStringDecl>=<LastStringVal>;
+<else>CDR_String <StringDecls>=<StringVals>;
+<endif>
+>>
+initializeString(StringDecls, isString)::=
+<<
+<StringDecls:{d | if (!CDR_Primitive_initialize(&sample-><d>, (255)))
+{
+     return RTI_FALSE;
+\}
+}; separator="\n">
+>>
+finalizeString(StringDecls, isString)::=
+<<
+<StringDecls:{d |CDR_String_finalize(&sample-><d>);}; separator="\n">
+>>
+
+
+genBoolean(multiBoolean, BooleanDecls, BooleanVals, LastBooleanDecl, LastBooleanVal)::=
+<<
+<if(multiBoolean)>
+CDR_Boolean <BooleanDecls,BooleanVals:{d,v | <d>=<v>,}><LastBooleanDecl>=<LastBooleanVal>;
+<else>CDR_Boolean <BooleanDecls>=<BooleanVals>;
+<endif>
+>>
+initializeBoolean(BooleanDecls, isBoolean)::=
+<<
+<BooleanDecls:{d | CDR_Primitive_init_<if(isBoolean)>Boolean<endif>(&sample-><d>);}; separator="\n">
+>>
+
+genFloat(multiFloat, FloatDecls, FloatVals, lastFloatDecl, lastFloatVal)::=
+<<
+<if(multiFloat)>
+CDR_Float <FloatDecls,FloatVals:{d,v | <d>=<v>,}><lastFloatDecl>=<lastFloatVal>;
+<else>CDR_Float <FloatDecls>=<FloatVals>;
+<endif>
+>>
+initializeFloat(FloatDecls, isFloat)::=
+<<
+<FloatDecls:{d | CDR_Primitive_init_<if(isFloat)>Float<endif>(&sample-><d>);}; separator="\n">
+>>
+
+
+genDouble(multiDouble, DoubleDecls, DoubleVals, lastDoubleDecl, lastDoubleVal)::=
+<<
+<if(multiDouble)>
+CDR_Double <DoubleDecls,DoubleVals:{d,v | <d>=<v>,}><lastDoubleDecl>=<lastDoubleVal>;
+<else>CDR_Double <DoubleDecls>=<DoubleVals>;
+<endif>
+>>
+initializeDouble(DoubleDecls, isDouble)::=
+<<
+<DoubleDecls:{d | CDR_Primitive_init_<if(isDouble)>Double<endif>(&sample-><d>);}; separator="\n">
+>>
+
+
+genLongDouble(multiLongDouble, LongDoubleDecls, LongDoubleVals, lastLongDoubleDecl, lastLongDoubleVal)::=
+<<
+<if(multiLongDouble)>
+CDR_LongDouble <LongDoubleDecls,LongDoubleVals:{d,v | <d>=<v>,}><lastLongDoubleDecl>=<lastLongDoubleVal>;
+<else>CDR_LongDouble <LongDoubleDecls>=<LongDoubleVals>;
+<endif>
+>>
+initializeLongDouble(LongDoubleDecls, isLongDouble)::=
+<<
+<LongDoubleDecls:{d | CDR_Primitive_init_<if(isLongDouble)>LongDouble<endif>(&sample-><d>);}; separator="\n">
+>>
+
+
+genArrayAssign(type, decl, vals, lastVal, length) ::=
+<<
+CDR_<type> <decl>[<length>]={<vals:{v | <v>,}><lastVal>};
+>>
+initializeArray(type, decl, length) ::=
+<<
+CDR_Primitive_init_Array(
+    sample-><decl>, ((<length>)*CDR_<decl>_SIZE));
+>>
+finalizeArray(type, decl, length) ::=
+<<
+RTI_UINT32 i;
+
+for (i = 0; i \< <length>; i++) {
+    if (!CDR_<type>_copy(&dst-?<decl>[i] ,
+    &src-><decl>[i])) {
+    return RTI_FALSE;
+    }
+}
+>>
+
+struct(name,space,nested, isShort,multiShort,ShortDecls,ShortVals,lastShortDecl,lastShortVal,
+isLong,multiLong,LongDecls,LongVals,lastLongDecl,lastLongVal,
+isLongLong,multiLongLong,LongLongDecls,LongLongVals,lastLongLongDecl,lastLongLongVal,
+isUnsignedShort,multiUnsignedShort,UnsignedShortDecls,UnsignedShortVals,lastUnsignedShortDecl,lastUnsignedShortVal,
+isUnsignedLong,multiUnsignedLong,UnsignedLongDecls,UnsignedLongVals,lastUnsignedLongDecl,lastUnsignedLongVal,
+isUnsignedLongLong,multiUnsignedLongLong,UnsignedLongLongDecls,UnsignedLongLongVals,lastUnsignedLongLongDecl,lastUnsignedLongLongVal,
+isChar,multiChar,CharDecls,CharVals,lastCharDecl,lastCharVal,
+isString,multiString,StringDecls,StringVals,lastStringDecl,lastStringVal,
+isBoolean,multiBoolean,BooleanDecls,BooleanVals,lastBooleanDecl,lastBooleanVal,
+isFloat,multiFloat,FloatDecls,FloatVals,lastFloatDecl,lastFloatVal,
+isDouble,multiDouble,DoubleDecls,DoubleVals,lastDoubleDecl,lastDoubleVal,
+isLongDouble,multiLongDouble,LongDoubleDecls,LongDoubleVals,lastLongDoubleDecl,lastLongDoubleVal,
+isArray,type,decl,vals,lastVal,length
+) ::=<<
+struct <if(nested)><module(space)><endif><name>Seq;
+class <if(nested)><module(space)><endif><name>TypeSupport;
+class <if(nested)><module(space)><endif><name>DataWriter;
+class <if(nested)><module(space)><endif><name>DataReader;
+
+class <if(nested)><module(space)><endif><name>
+{
+    public:
+        <typedefStruct(name, space)>
+        <typedefTypeSupport(name, space)>
+        <typedefDataWriter(name, space)>
+        <typedefDataReader(name, space)>
+
+        <if(isShort)>
+        <genShort(multiShort, ShortDecls, ShortVals, lastShortDecl, lastShortVal)>
+        <endif>
+        <if(isLong)>
+        <genLong(multiLong, LongDecls, LongVals, lastLongDecl, lastLongVal)>
+        <endif>
+        <if(isLongLong)>
+        <genLongLong(multiLongLong,LongLongDecls,LongLongVals, lastLongLongDecl, lastLongLongVal)>
+        <endif>
+        <if(isUnsignedShort)>
+        <genUnsignedShort(multiUnsignedShort, UnsignedShortDecls, UnsignedShortVals, lastUnsignedShortDecl, lastUnsignedShortVal)>
+        <endif>
+        <if(isUnsignedLong)>
+        <genUnsignedLong(multiUnsignedLong, UnsignedLongDecls, UnsignedLongVals, lastUnsignedLongDecl, lastUnsignedLongVal)>
+        <endif>
+        <if(isUnsignedLongLong)>
+        <genUnsignedLongLong(multiUnsignedLongLong, UnsignedLongLongDecls, UnsignedLongLongVals, lastUnsignedLongLongDecl, lastUnsignedLongLongVal)>
+        <endif>
+        <if(isChar)>
+        <genChar(multiChar, CharDecls, CharVals, lastCharDecl, lastCharVal)>
+        <endif>
+        <if(isString)>
+        <genString(multiString, StringDecls, StringVals, lastStringDecl, lastStringVal)>
+        <endif>
+        <if(isBoolean)>
+        <genBoolean(multiBoolean, BooleanDecls, BooleanVals, lastBooleanDecl, lastBooleanVal)>
+        <endif>
+        <if(isFloat)>
+        <genFloat(multiFloat, FloatDecls, FloatVals, lastFloatDecl, lastFloatVal)>
+        <endif>
+        <if(isDouble)>
+        <genDouble(multiDouble, DoubleDecls, DoubleVals, lastDoubleDecl, lastDoubleVal)>
+        <endif>
+        <if(isLongDouble)>
+        <genLongDouble(multiLongDouble, LongDoubleDecls, LongDoubleVals, lastLongDoubleDecl, lastLongDoubleVal)>
+        <endif>
+        <if(isArray)>
+        <genArrayAssign(type,decl,vals,lastVal,length)>
+        <endif>
+};
+
+extern const char *<if(nested)><module(space)><endif><name>TYPENAME;
+
+REDA_DEFINE_SEQUENCE_STRUCT<parens(genDecl(name, space))>;
+
+REDA_DEFINE_SEQUENCE_IN_C<parens(genDecl(name, space))>;
+
+NDDSUSERDllExport extern RTI_BOOL
+<if(nested)><module(space)><endif><name>_initialize(<if(nested)><module(space)><endif><name>* sample)
+{
+    <if(isShort)>
+    <initializeShort(ShortDecls, isShort)>
+    <if(multiShort)>
+    CDR_Primitive_init_Short(&sample-><lastShortDecl>);
+    <endif>
+    <endif>
+    <if(isLong)>
+    <initializeLong(LongDecls, isLong)>
+    <if(multiLong)>
+    CDR_Primitive_init_Long(&sample-><lastLongDecl>);
+    <endif>
+    <endif>
+    <if(isLongLong)>
+    <initializeLongLong(LongLongDecls, isLongLong)>
+    <if(multiLongLong)>
+    CDR_Primitive_init_LongLong(&sample-><lastLongLongDecl>);
+    <endif>
+    <endif>
+    <if(isUnsignedShort)>
+    <initializeUnsignedShort(UnsignedShortDecls, isUnsignedShort)>
+    <if(multiUnsignedShort)>
+    CDR_Primitive_init_UnsignedShort(&sample-><lastUnsignedShortDecl>);
+    <endif>
+    <endif>
+    <if(isUnsignedLong)>
+    <initializeUnsignedLong(UnsignedLongDecls, isUnsignedLong)>
+    <if(multiUnsignedLong)>
+    CDR_Primitive_init_UnsignedLong(&sample-><lastUnsignedLongDecl>);
+    <endif>
+    <endif>
+    <if(isUnsignedLongLong)>
+    <initializeUnsignedLongLong(UnsignedLongLongDecls, isUnsignedLongLong)>
+    <if(multiUnsignedLongLong)>
+    CDR_Primitive_init_UnsignedLongLong(&sample-><lastUnsignedLongLongDecl>);
+    <endif>
+    <endif>
+    <if(isChar)>
+    <initializeChar(CharDecls, isChar)>
+    <if(multiChar)>
+    CDR_Primitive_init_Char(&sample-><lastCharDecl>);
+    <endif>
+    <endif>
+    <if(isString)>
+    <initializeString(StringDecls, isString)>
+    <if(multiString)>
+    CDR_Primitive_init_String(&sample-><lastStringDecl>);
+    <endif>
+    <endif>
+    <if(isBoolean)>
+    <initializeBoolean(BooleanDecls, isBoolean)>
+    <if(multiBoolean)>
+    CDR_Primitive_init_Boolean(&sample-><lastBooleanDecl>);
+    <endif>
+    <endif>
+    <if(isFloat)>
+    <initializeFloat(FloatDecls, isFloat)>
+    <if(multiFloat)>
+    CDR_Primitive_init_Float(&sample-><lastFloatDecl>);
+    <endif>
+    <endif>
+    <if(isDouble)>
+    <initializeDouble(DoubleDecls, isDouble)>
+    <if(multiDouble)>
+    CDR_Primitive_init_Double(&sample-><lastDoubleDecl>);
+    <endif>
+    <endif>
+    <if(isLongDouble)>
+    <initializeLongDouble(LongDoubleDecls, isLongDouble)>
+    <if(multiLongDouble)>
+    CDR_Primitive_init_LongDouble(&sample-><lastLongDoubleDecl>);
+    <endif>
+    <endif>
+    <if(isArray)>
+    <initializeArray(type,decl,length)>
+    <endif>
+
+    return RTI_TRUE;
+}
+
+NDDSUSERDllExport extern RTI_BOOL
+<if(nested)><module(space)><endif><name>_finalize(<if(nested)><module(space)><endif><name>* sample)
+{
+    UNUSED_ARG(sample);
+    <if(isString)>
+    <finalizeString(StringDecls, isString)>
+    <if(multiString)>
+    CDR_String_finalize(&sample-><lastStringDecl>);
+    <endif>
+    <endif>
+    <if(isArray)>
+    <finalizeArray(type, decl, length)>
+    <endif>
+    return RTI_TRUE;
+}
+>>
